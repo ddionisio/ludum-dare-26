@@ -145,8 +145,8 @@ public class FlockActionController : ActionListener {
 		}
 		
 	}
-	
-	protected virtual void AutoAttackCheck(UnitEntity unit) {
+
+    protected virtual void AutoAttackCheck(UnitBaseEntity unit) {
 		if(!(type == ActionType.Attack || type == ActionType.Retreat)) {
 			ActionTarget target = unit.actionTarget;
 			if(target != null && target.type == ActionType.Attack && target.vacancy && currentPriority <= target.priority) {

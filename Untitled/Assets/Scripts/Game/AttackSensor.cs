@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
-public class AttackSensor : SensorSingle<UnitEntity> {
+public class AttackSensor : SensorSingle<UnitBaseEntity> {
     public int hostileFlags; //based on flock id
 
     public float minRange = 0.0f;
@@ -21,8 +21,8 @@ public class AttackSensor : SensorSingle<UnitEntity> {
             && Vector2.Dot(dir, curDir) > mCosTheta;
     }
 
-    protected override bool UnitVerify(UnitEntity unit) {
-        return (hostileFlags & (1 << unit.flockUnit.id)) != 0;
+    protected override bool UnitVerify(UnitBaseEntity unit) {
+        return (hostileFlags & (1 << unit.flockId)) != 0;
     }
 
     void Awake() {

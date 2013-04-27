@@ -2,15 +2,15 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
-public class UnitEntity : EntityBase {
+public class UnitEntity : UnitBaseEntity {
         
     private FlockUnit mFlockUnit;
     private ActionListener mListener;
-    private ActionTarget mActTarget;
 
     public FlockUnit flockUnit { get { return mFlockUnit; } }
     public ActionListener listener { get { return mListener; } }
-    public ActionTarget actionTarget { get { return mActTarget; } }
+
+    public override int flockId { get { return mFlockUnit.id; } }
     
     /*public Player owner {
         get {
@@ -30,7 +30,6 @@ public class UnitEntity : EntityBase {
 
         mFlockUnit = GetComponentInChildren<FlockUnit>();
         mListener = GetComponentInChildren<ActionListener>();
-        mActTarget = GetComponentInChildren<ActionTarget>();
 
         if(mFlockUnit != null) {
             mFlockUnit.groupMoveEnabled = false;
@@ -122,12 +121,6 @@ public class UnitEntity : EntityBase {
     private void ClearData() {
         if(mListener != null) {
             mListener.SetActive(false);
-        }
-
-        if(mActTarget != null) {
-            mActTarget.StopAction();
-            mActTarget.indicatorOn = false;
-            mActTarget.lockTargetted = false;
         }
 
         FlockUnitRelease();

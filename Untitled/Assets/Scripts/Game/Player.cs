@@ -1,11 +1,11 @@
 using UnityEngine;
 using System.Collections;
 
-public class Player : EntityBase {
+public class Player : UnitBaseEntity {
    
-    private CharacterController mCharCtrl;
-
     private bool mInputEnabled = false;
+
+    public override int flockId { get { return 1; } }
     
     public override void SpawnFinish() {
         //enable input
@@ -26,7 +26,6 @@ public class Player : EntityBase {
     protected override void Awake() {
         base.Awake();
 
-        mCharCtrl = GetComponent<CharacterController>();
     }
 
     // Use this for initialization
@@ -40,16 +39,16 @@ public class Player : EntityBase {
 
     // Update is called once per frame
     void Update() {
-        float dt = Time.deltaTime;
+        //float dt = Time.deltaTime;
 
-        InputManager input = Main.instance.input;
+        //InputManager input = Main.instance.input;
 
-        Vector3 delta = Vector3.zero;
+        //Vector3 delta = Vector3.zero;
 
         //delta.x = speed * input.GetAxis(0, InputAction.MoveHorizontal) * dt;
         //delta.y = fallSpeed * dt;
 
-        mCharCtrl.Move(delta);
+        //mCharCtrl.Move(delta);
     }
 
     void OnInputJump(InputManager.Info data) {
