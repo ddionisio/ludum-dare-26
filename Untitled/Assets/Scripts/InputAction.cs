@@ -2,6 +2,5 @@
 public struct InputAction {
     public const int MoveHorizontal = 0;
     public const int MoveVertical = 1;
-    public const int Jump = 2;
-    public const int Action = 3;
+    public const int Action = 2;
 }

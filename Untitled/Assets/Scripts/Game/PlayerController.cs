@@ -7,18 +7,29 @@ public class PlayerController : MotionBase {
 
     private bool mInputEnabled = false;
 
+    [System.NonSerialized]
+    public PlayerActSensor curActSensor;
+
     public bool inputEnabled {
         get { return mInputEnabled; }
         set {
             if(mInputEnabled != value) {
+                InputManager input = Main.instance != null ? Main.instance.input : null;
+
                 mInputEnabled = value;
 
                 if(value) {
+                    input.AddButtonCall(0, InputAction.Action, OnInputAction);
                 }
                 else {
+                    input.RemoveButtonCall(0, InputAction.Action, OnInputAction);
                 }
             }
         }
+    }
+
+    void OnDisable() {
+        curActSensor = null;
     }
 
     protected override void Awake() {
@@ -39,5 +50,13 @@ public class PlayerController : MotionBase {
         }
 
         base.FixedUpdate();
+    }
+
+    void OnInputAction(InputManager.Info data) {
+        if(data.state == InputManager.State.Pressed) {
+            if(curActSensor != null) {
+                curActSensor.Action();
+            }
+        }
     }
 }

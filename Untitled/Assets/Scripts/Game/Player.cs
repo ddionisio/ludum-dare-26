@@ -4,8 +4,6 @@ using System.Collections;
 public class Player : UnitBaseEntity {
     public float force;
    
-    private bool mInputEnabled = false;
-
     private PlayerController mController;
     private PlayerHealth mHealth;
 
@@ -50,12 +48,6 @@ public class Player : UnitBaseEntity {
     protected override void SpawnStart() {
     }
 
-    void OnInputJump(InputManager.Info data) {
-    }
-
-    void OnInputAction(InputManager.Info data) {
-    }
-
     void OnControllerColliderHit(ControllerColliderHit hit) {
         //Debug.Log("hit: " + hit.collider.gameObject.name);
     }
@@ -64,14 +56,5 @@ public class Player : UnitBaseEntity {
         if(playerHealth.curHealth <= 0.0f) {
             Debug.Log("Game Over!");
         }
-    }
-
-    private void InputEnable(bool yes) {
-        if(yes) {
-        }
-        else {
-        }
-
-        mInputEnabled = yes;
     }
 }
