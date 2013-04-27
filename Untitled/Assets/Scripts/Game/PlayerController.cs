@@ -1,47 +1,43 @@
 using UnityEngine;
 using System.Collections;
 
-public class PlayerController : MonoBehaviour {
-    public float fallSpeed;
+public class PlayerController : MotionBase {
 
-    public float speed;
+    public float force;
 
-    public float jumpSpeed;
+    private bool mInputEnabled = false;
 
-    private CharacterController mCharCtrl;
+    public bool inputEnabled {
+        get { return mInputEnabled; }
+        set {
+            if(mInputEnabled != value) {
+                mInputEnabled = value;
 
-    private bool isJump;
-    
-    void Awake() {
-        mCharCtrl = GetComponent<CharacterController>();
+                if(value) {
+                }
+                else {
+                }
+            }
+        }
     }
 
-	// Use this for initialization
-	void Start () {
-	
-	}
-	
-	// Update is called once per frame
-	void Update () {
-        float dt = Time.deltaTime;
+    protected override void Awake() {
+        base.Awake();
 
-        InputManager input = Main.instance.input;
-
-        Vector3 delta = Vector3.zero;
-
-        delta.x = speed * input.GetAxis(0, InputAction.MoveHorizontal) * dt;
-        delta.y = fallSpeed * dt;
-
-        mCharCtrl.Move(delta);
-	}
-
-    void OnInputJump(InputManager.Info data) {
     }
 
-    void OnInputAction(InputManager.Info data) {
-    }
+    protected override void FixedUpdate() {
+        if(mInputEnabled) {
+            InputManager input = Main.instance.input;
 
-    void OnControllerColliderHit(ControllerColliderHit hit) {
-        //Debug.Log("hit: " + hit.collider.gameObject.name);
+            float moveX = input.GetAxis(0, InputAction.MoveHorizontal);
+            float moveY = input.GetAxis(0, InputAction.MoveVertical);
+
+            if(moveX != 0.0f || moveY != 0.0f) {
+                body.AddForce(moveX * force, moveY * force, 0.0f);
+            }
+        }
+
+        base.FixedUpdate();
     }
 }

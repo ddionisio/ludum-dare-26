@@ -126,6 +126,8 @@ public class FlockActionController : ActionListener {
 		
 		StopCoroutine("FollowStop");
 		StopCoroutine("ReturnToLeader");
+
+        //if no default, see if we have a waypoint to follow
 	}
 	
 	protected override void OnDestroy ()

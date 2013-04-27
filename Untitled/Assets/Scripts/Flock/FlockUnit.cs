@@ -239,6 +239,8 @@ public class FlockUnit : MotionBase {
             if(mCurUpdateDelay >= updateDelay) {
                 mCurUpdateDelay = 0;
 
+                int numFollow = 0;
+
                 Vector2 sumForce = Vector2.zero;
 
                 switch(mState) {
@@ -253,7 +255,6 @@ public class FlockUnit : MotionBase {
                             Vector2 _dir = dest - pos;
                             mMoveTargetDist = _dir.magnitude;
 
-                            int numFollow = 0;
                             sumForce = groupMoveEnabled ? ComputeMovement(out numFollow) : ComputeSeparate();
 
                             if(mMoveTargetDist > 0) {
@@ -282,7 +283,7 @@ public class FlockUnit : MotionBase {
                         break;
 
                     default:
-                        sumForce = ComputeSeparate();
+                        sumForce = ComputeMovement(out numFollow); //ComputeSeparate();
                         break;
                 }
 
@@ -306,6 +307,8 @@ public class FlockUnit : MotionBase {
         Gizmos.DrawWireSphere(transform.position, wallRadius);
 
         Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(transform.position, separateDistance);
+
         Gizmos.color *= 0.75f;
         Gizmos.DrawWireSphere(transform.position, avoidDistance);
     }

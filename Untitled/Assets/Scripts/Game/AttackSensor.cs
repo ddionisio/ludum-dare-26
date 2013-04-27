@@ -6,6 +6,7 @@ public class AttackSensor : SensorSingle<UnitBaseEntity> {
 
     public float minRange = 0.0f;
     public float maxRange = 0.0f; //range to attack
+    public bool angleCheck = false;
     public float angle = 0.0f;
 
     private float mCosTheta;
@@ -18,7 +19,7 @@ public class AttackSensor : SensorSingle<UnitBaseEntity> {
 
         return dist >= minRange
             && dist <= maxRange
-            && Vector2.Dot(dir, curDir) > mCosTheta;
+            && (!angleCheck || Vector2.Dot(dir, curDir) > mCosTheta);
     }
 
     protected override bool UnitVerify(UnitBaseEntity unit) {

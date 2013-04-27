@@ -8,11 +8,15 @@ namespace Game.Actions {
         public ActionTarget.Priority priority = ActionTarget.Priority.Highest;
         public bool resumeDefault = true;
 
+        [Tooltip("If resumeDefault is true and there is no default, then go to this event")]
+        public FsmEvent onNoDefault;
+
         public override void Reset() {
             base.Reset();
 
             priority = ActionTarget.Priority.Highest;
             resumeDefault = true;
+            onNoDefault = null;
         }
 
         // Code that runs on entering the state.
@@ -24,8 +28,12 @@ namespace Game.Actions {
         }
 
         void DoStop() {
-            if(mComp != null)
+            if(mComp != null) {
                 mComp.StopAction(priority, resumeDefault);
+
+                if(resumeDefault && mComp.defaultTarget == null && !FsmEvent.IsNullOrEmpty(onNoDefault))
+                    Fsm.Event(onNoDefault);
+            }
         }
     }
 }

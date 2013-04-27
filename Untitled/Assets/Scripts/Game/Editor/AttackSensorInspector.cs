@@ -17,6 +17,9 @@ public class AttackSensorInspector : Editor {
 
         input.minRange = EditorGUILayout.FloatField("Min Range", input.minRange);
         input.maxRange = EditorGUILayout.FloatField("Max Range", input.maxRange);
-        input.angle = EditorGUILayout.Slider("Angle", input.angle, 0.0f, 359.0f);
+        input.angleCheck = GUILayout.Toggle(input.angleCheck, "Angle Check");
+
+        if(input.angleCheck)
+            input.angle = EditorGUILayout.Slider("Angle", input.angle, 0.0f, 359.0f);
     }
 }
