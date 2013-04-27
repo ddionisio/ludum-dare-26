@@ -1,0 +1,6 @@
+[submodule "Untitled/Assets/M8"]
+	path = Untitled/Assets/M8
+	url = https://github.com/ddionisio/MateUnity.git
+[submodule "Untitled/Assets/M8PlayMaker"]
+	path = Untitled/Assets/M8PlayMaker
+	url = https://github.com/ddionisio/MatePlayMaker.git
