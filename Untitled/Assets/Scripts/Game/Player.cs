@@ -6,8 +6,9 @@ public class Player : UnitBaseEntity {
    
     private PlayerController mController;
     private PlayerHealth mHealth;
+    private FlockFilter mFlockFilter;
 
-    public override int flockId { get { return 1; } }
+    public override int flockId { get { return mFlockFilter.id; } }
     
     public override void SpawnFinish() {
         //enable input
@@ -16,7 +17,7 @@ public class Player : UnitBaseEntity {
 
     protected override void OnDespawned() {
         //disable input
-        mController.inputEnabled = false;
+        mController.ResetState();
 
         mHealth.ResetStats();
 
@@ -25,7 +26,7 @@ public class Player : UnitBaseEntity {
 
     protected override void OnDestroy() {
         //disable input
-        mController.inputEnabled = false;
+        mController.ResetState();
 
         base.OnDestroy();
     }
@@ -35,6 +36,8 @@ public class Player : UnitBaseEntity {
 
         mController = GetComponent<PlayerController>();
         mHealth = GetComponent<PlayerHealth>();
+        mFlockFilter = GetComponent<FlockFilter>();
+
         mHealth.hitCallback += OnHit;
     }
 

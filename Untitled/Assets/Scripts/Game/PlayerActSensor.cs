@@ -35,7 +35,7 @@ public class PlayerActSensor : SensorSingle<PlayerController> {
     }
 
     //called by player controller when they hit action
-    public virtual void Action() {
+    public virtual void Action(PlayerController ctrl) {
         if(mFSM != null)
             mFSM.Fsm.Event(EntityEvent.TriggerAct);
     }
