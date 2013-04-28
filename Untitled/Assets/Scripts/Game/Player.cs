@@ -57,7 +57,7 @@ public class Player : UnitBaseEntity {
 
     void OnHit(PlayerHealth playerHealth) {
         if(playerHealth.curHealth <= 0.0f) {
-            Debug.Log("Game Over!");
+            FSM.Fsm.Event(EntityEvent.Kill);
         }
     }
 }

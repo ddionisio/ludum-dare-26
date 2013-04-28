@@ -5,7 +5,8 @@ public class PlayerHealth : MonoBehaviour {
     public enum State {
         None,
         RegenWait,
-        Regen
+        Regen,
+        Dead
     }
 
     public delegate void OnHit(PlayerHealth playerHealth);
@@ -39,10 +40,14 @@ public class PlayerHealth : MonoBehaviour {
 
     public void Hit(float amt) {
         mCurHealth -= amt;
-        if(mCurHealth < 0.0f)
+        if(mCurHealth <= 0.0f) {
             mCurHealth = 0.0f;
 
-        SetState(State.RegenWait);
+            SetState(State.Dead);
+        }
+        else {
+            SetState(State.RegenWait);
+        }
 
         if(hitCallback != null)
             hitCallback(this);
@@ -101,7 +106,7 @@ public class PlayerHealth : MonoBehaviour {
                 mTiler = null;
             }
         }
-        else {
+        else if(mTiler == null) {
             CameraController cc = CameraController.instance;
             if(cc != null) {
                 mTiler = cc.mainCamera.GetComponent<M8.ImageEffects.Tile>();
@@ -119,6 +124,12 @@ public class PlayerHealth : MonoBehaviour {
                 break;
 
             case State.Regen:
+                break;
+
+            case State.Dead:
+                if(mTiler != null) {
+                    mTiler.numTiles = minTileRes;
+                }
                 break;
         }
     }

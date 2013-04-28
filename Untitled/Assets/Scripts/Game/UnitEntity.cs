@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class UnitEntity : UnitBaseEntity {
+    public string waypointFollow;
+    public bool isLeader = false;
         
     private FlockUnit mFlockUnit;
     private ActionListener mListener;
@@ -46,6 +48,21 @@ public class UnitEntity : UnitBaseEntity {
     // Use this for initialization
     protected override void Start() {
         base.Start();
+
+        if(isLeader) {
+            actionTarget.type = ActionType.Follow;
+
+            FlockGroup grp = FlockGroup.GetGroup(flockId);
+            if(grp != null) {
+                grp.addCallback += OnGroupAdd;
+                grp.removeCallback += OnGroupRemove;
+
+                //add current entities from grp
+                foreach(FlockUnit unit in grp.units) {
+                    OnGroupAdd(unit);
+                }
+            }
+        }
     }
 
     protected override void OnDespawned() {
@@ -80,6 +97,14 @@ public class UnitEntity : UnitBaseEntity {
     }
 
     protected override void OnDestroy() {
+        if(isLeader) {
+            FlockGroup grp = FlockGroup.GetGroup(flockId);
+            if(grp != null) {
+                grp.addCallback -= OnGroupAdd;
+                grp.removeCallback -= OnGroupRemove;
+            }
+        }
+
         ClearData();
 
         if(mListener != null) {
@@ -146,6 +171,28 @@ public class UnitEntity : UnitBaseEntity {
             }
 
             mFlockUnit.ResetData();
+        }
+    }
+
+    void OnGroupAdd(FlockUnit flockUnit) {
+        UnitEntity unit = flockUnit.GetComponent<UnitEntity>();
+        if(unit != null && unit != this) {
+            FlockActionController actionListen = unit.listener as FlockActionController;
+            if(actionListen != null && actionListen.leader == null) {
+                actionListen.defaultTarget = actionTarget;
+                actionListen.leader = transform;
+            }
+        }
+    }
+
+    void OnGroupRemove(FlockUnit flockUnit) {
+        UnitEntity unit = flockUnit.GetComponent<UnitEntity>();
+        if(unit != null) {
+            FlockActionController actionListen = unit.listener as FlockActionController;
+            if(actionListen != null && actionListen.leader == transform) {
+                actionListen.defaultTarget = null;
+                actionListen.leader = null;
+            }
         }
     }
 }
