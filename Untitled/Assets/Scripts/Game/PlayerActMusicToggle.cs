@@ -29,6 +29,9 @@ public class PlayerActMusicToggle : PlayerActSensor {
 
         Main.instance.userSettings.isMusicEnable = !Main.instance.userSettings.isMusicEnable;
 
+        if(Main.instance.userSettings.isMusicEnable)
+            Main.instance.userSettings.volume = 1.0f; //just being safe...
+
         RefreshText();
     }
 
