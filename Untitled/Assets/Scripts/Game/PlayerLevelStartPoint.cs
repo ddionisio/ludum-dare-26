@@ -24,12 +24,13 @@ public class PlayerLevelStartPoint : MonoBehaviour {
     }
 
     void OnDestroy() {
-        mInstance = null;
+        if(mInstance == this)
+            mInstance = null;
     }
 
     void Awake() {
         //Object.DontDestroyOnLoad(gameObject);
-
-        mInstance = this;
+        if(mInstance == null)
+            mInstance = this;
     }
 }

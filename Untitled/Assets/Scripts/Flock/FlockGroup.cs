@@ -77,6 +77,7 @@ public class FlockGroup : MonoBehaviour {
         foreach(Transform t in transform) {
             FlockUnit unit = t.GetComponentInChildren<FlockUnit>();
             if(unit != null) {
+                unit.id = id;
                 AddUnit(unit);
             }
         }

@@ -16,8 +16,12 @@ public class PlayerHealth : MonoBehaviour {
     public float maxTileRes = 1024;
     public float minTileRes = 4;
 
+    public float minTileDeathRes = 4;
+    public float minTileDeathDelay = 1.0f;
+
     public float regenDelay = 1.0f;
     public float regenRate = 5.0f; //per second
+    public float regenRateIdle = 0.1f;
 
     public event OnHit hitCallback;
 
@@ -29,6 +33,9 @@ public class PlayerHealth : MonoBehaviour {
 
     private M8.ImageEffects.Tile mTiler;
 
+    [System.NonSerialized]
+    public bool idleRegen = false;
+
     public float curHealth { get { return mCurHealth; } }
     public State curState { get { return mCurState; } }
 
@@ -36,21 +43,24 @@ public class PlayerHealth : MonoBehaviour {
         mCurHealth = maxHealth;
 
         SetState(State.None);
+
+        idleRegen = false;
     }
 
     public void Hit(float amt) {
-        mCurHealth -= amt;
+        /*mCurHealth -= amt;
         if(mCurHealth <= 0.0f) {
             mCurHealth = 0.0f;
 
-            SetState(State.Dead);
+            if(mCurState != State.Dead)
+                SetState(State.Dead);
         }
         else {
             SetState(State.RegenWait);
         }
 
         if(hitCallback != null)
-            hitCallback(this);
+            hitCallback(this);*/
     }
 
     void OnDestroy() {
@@ -82,13 +92,26 @@ public class PlayerHealth : MonoBehaviour {
                 break;
 
             case State.Regen:
-                mCurHealth += regenRate * Time.deltaTime;
+                mCurHealth += (idleRegen ? regenRateIdle : regenRate) * Time.deltaTime;
                 if(mCurHealth >= maxHealth) {
                     mCurHealth = maxHealth;
                     SetState(State.None);
                 }
                 else if(mTiler != null) {
                     mTiler.numTiles = minTileRes + (maxTileRes - minTileRes) * (mCurHealth / maxHealth);
+                }
+                break;
+
+            case State.Dead:
+                if(mTiler != null) {
+                    mCurTime += Time.deltaTime;
+                    if(mCurTime < minTileDeathDelay) {
+                        mTiler.numTiles = minTileRes + (mCurTime / minTileDeathDelay) * (minTileDeathRes - minTileRes);
+                    }
+                    else {
+                        mTiler.numTiles = minTileDeathRes;
+                        mTiler = null;
+                    }
                 }
                 break;
         }
@@ -130,6 +153,8 @@ public class PlayerHealth : MonoBehaviour {
                 if(mTiler != null) {
                     mTiler.numTiles = minTileRes;
                 }
+
+                mCurTime = 0.0f;
                 break;
         }
     }

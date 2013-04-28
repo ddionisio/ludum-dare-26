@@ -14,7 +14,7 @@ public class FlockFilterInspector : Editor {
 
         FlockFilter input = target as FlockFilter;
 
-        input.id = EditorGUILayout.IntSlider("id", input.id, 1, 31);
+        input.id = EditorGUILayout.IntField("id", input.id);
 
         input.avoidTypeFilter = EditorGUILayout.MaskField("Avoid Filter", input.avoidTypeFilter, mMasks);
     }

@@ -21,6 +21,8 @@ public class PlayerController : MotionBase {
 
     public float actionBoostForce;
 
+    public float idleThreshold = 1.0f;
+
     private bool mInputEnabled = false;
 
     private bool mActionActive = false;
@@ -35,6 +37,9 @@ public class PlayerController : MotionBase {
     private Player mPlayer;
 
     private Vector2 mCurMove;
+
+    private Vector2 mLastIdlePos;
+    private bool mIdleCheck;
 
     [System.NonSerialized]
     public PlayerActSensor curActSensor;
@@ -67,6 +72,7 @@ public class PlayerController : MotionBase {
         inputEnabled = false;
         curActSensor = null;
         mActionActive = false;
+        mIdleCheck = false;
 
         circleBody.localPosition = Vector3.zero;
         mBodyOfsStart = Vector2.zero;
@@ -103,6 +109,16 @@ public class PlayerController : MotionBase {
                 circleBody.localPosition = Vector2.Lerp(mBodyOfsStart, mBodyOfsEnd, mBodyCurTime / bodyOfsDelay);
             }
         }
+
+        if(mIdleCheck) {
+            Vector2 delta = transform.position;
+            delta -= mLastIdlePos;
+            if(delta.sqrMagnitude >= idleThreshold * idleThreshold) {
+                mPlayer.health.idleRegen = false;
+                mIdleCheck = false;
+                //Debug.Log("resume regular regen");
+            }
+        }
     }
     
     protected override void FixedUpdate() {
@@ -113,7 +129,14 @@ public class PlayerController : MotionBase {
             mCurMove.y = input.GetAxis(0, InputAction.MoveVertical);
 
             if(mCurMove.x != 0.0f || mCurMove.y != 0.0f) {
-                body.AddForce(mCurMove*force);
+                body.AddForce(mCurMove * force);
+            }
+            else if(!mIdleCheck) {
+                mPlayer.health.idleRegen = true;
+                mLastIdlePos = transform.position;
+                mIdleCheck = true;
+
+                //Debug.Log("set to idle regen");
             }
 
             mBodyOfsStart = circleBody.localPosition;
