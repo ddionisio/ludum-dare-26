@@ -23,6 +23,10 @@ public class CameraController : MonoBehaviour {
         }
     }
 
+    public void SnapToAttach() {
+        transform.position = mAttachTo.position;
+    }
+
     void OnDestroy() {
         mInstance = null;
     }

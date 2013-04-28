@@ -9,6 +9,9 @@ public class Player : UnitBaseEntity {
     private FlockFilter mFlockFilter;
 
     public override int flockId { get { return mFlockFilter.id; } }
+
+    public PlayerController controller { get { return mController; } }
+    public PlayerHealth health { get { return mHealth; } }
     
     public override void SpawnFinish() {
         //enable input
@@ -46,6 +49,12 @@ public class Player : UnitBaseEntity {
         base.Start();
 
         CameraController.instance.attachTo = transform;
+        CameraController.instance.SnapToAttach();
+
+        //apply any level start point
+        if(PlayerLevelStartPoint.instance != null) {
+            PlayerLevelStartPoint.instance.Set(this);
+        }
     }
 
     protected override void SpawnStart() {

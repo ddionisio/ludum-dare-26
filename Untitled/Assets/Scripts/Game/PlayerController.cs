@@ -19,6 +19,8 @@ public class PlayerController : MotionBase {
     public float bodyOfsLength = 1.0f;
     public float bodyOfsDelay = 0.25f;
 
+    public float actionBoostForce;
+
     private bool mInputEnabled = false;
 
     private bool mActionActive = false;
@@ -31,6 +33,8 @@ public class PlayerController : MotionBase {
     private WaitForSeconds mWaitDelay;
 
     private Player mPlayer;
+
+    private Vector2 mCurMove;
 
     [System.NonSerialized]
     public PlayerActSensor curActSensor;
@@ -105,15 +109,15 @@ public class PlayerController : MotionBase {
         if(mInputEnabled) {
             InputManager input = Main.instance.input;
 
-            float moveX = input.GetAxis(0, InputAction.MoveHorizontal);
-            float moveY = input.GetAxis(0, InputAction.MoveVertical);
+            mCurMove.x = input.GetAxis(0, InputAction.MoveHorizontal);
+            mCurMove.y = input.GetAxis(0, InputAction.MoveVertical);
 
-            if(moveX != 0.0f || moveY != 0.0f) {
-                body.AddForce(moveX * force, moveY * force, 0.0f);
+            if(mCurMove.x != 0.0f || mCurMove.y != 0.0f) {
+                body.AddForce(mCurMove*force);
             }
 
             mBodyOfsStart = circleBody.localPosition;
-            mBodyOfsEnd = new Vector2(moveX * bodyOfsLength, moveY * bodyOfsLength);
+            mBodyOfsEnd = mCurMove * bodyOfsLength;
             mBodyCurTime = 0.0f;
         }
 
@@ -137,6 +141,11 @@ public class PlayerController : MotionBase {
         float curTime = 0.0f;
 
         actionObject.SetActive(true);
+
+        //boost
+        if(actionBoostForce > 0.0f && mCurMove != Vector2.zero) {
+            body.AddForce(mCurMove.normalized * actionBoostForce);
+        }
 
         //intensify light
         while(curTime < intensifyDelay) {
