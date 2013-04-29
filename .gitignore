@@ -22,3 +22,6 @@ Ouya.meta
 Plugins/Android.meta
 
 *.suo
+/Untitled/Windows-Build
+/Untitled/Google-Build
+/Untitled/Linux-Build
