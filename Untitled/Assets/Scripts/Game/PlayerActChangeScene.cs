@@ -38,6 +38,9 @@ public class PlayerActChangeScene : PlayerActSensor {
     public override void Action(PlayerController ctrl) {
         base.Action(ctrl);
 
+        if(SoundPlayerGlobal.instance != null)
+            SoundPlayerGlobal.instance.Play("tele");
+
         if(game_2_complete) {
             SceneState.instance.SetGlobalFlag(playerGameState, 1, true, true);
         }

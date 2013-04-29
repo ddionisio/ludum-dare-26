@@ -150,6 +150,9 @@ public class PlayerController : MotionBase {
     void OnInputAction(InputManager.Info data) {
         if(data.state == InputManager.State.Pressed) {
             if(!mActionActive) {
+                if(SoundPlayerGlobal.instance != null)
+                    SoundPlayerGlobal.instance.Play("act");
+
                 if(curActSensor != null) {
                     curActSensor.Action(this);
                 }

@@ -48,7 +48,7 @@ public class PlayerHealth : MonoBehaviour {
     }
 
     public void Hit(float amt) {
-        /*mCurHealth -= amt;
+        mCurHealth -= amt;
         if(mCurHealth <= 0.0f) {
             mCurHealth = 0.0f;
 
@@ -60,7 +60,10 @@ public class PlayerHealth : MonoBehaviour {
         }
 
         if(hitCallback != null)
-            hitCallback(this);*/
+            hitCallback(this);
+
+        if(SoundPlayerGlobal.instance != null)
+            SoundPlayerGlobal.instance.Play("hurt");
     }
 
     void OnDestroy() {
