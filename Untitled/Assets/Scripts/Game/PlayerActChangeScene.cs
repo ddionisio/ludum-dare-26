@@ -5,8 +5,10 @@ using HutongGames.PlayMaker;
 
 public class PlayerActChangeScene : PlayerActSensor {
     public const string playerGameState = "pgame";
+    public const string playerLastSaveScene = "plastscene";
 
     public string toScene;
+    public bool useLastSavedScene;
 
     public string waypoint;
 
@@ -15,7 +17,7 @@ public class PlayerActChangeScene : PlayerActSensor {
     public bool game_2_complete;
     public bool game_3_complete;
     public bool game_4_complete;
-
+        
     protected override void UnitEnter(PlayerController unit) {
         base.UnitEnter(unit);
 
@@ -58,7 +60,7 @@ public class PlayerActChangeScene : PlayerActSensor {
 
         Player player = ctrl.player;
         FsmString fsmSceneString = player.FSM.FsmVariables.FindFsmString("toScene");
-        fsmSceneString.Value = toScene;
+        fsmSceneString.Value = useLastSavedScene ? UserData.instance.GetString(playerLastSaveScene, toScene) : toScene;
 
         player.FSM.Fsm.Event(EntityEvent.Kill);
     }

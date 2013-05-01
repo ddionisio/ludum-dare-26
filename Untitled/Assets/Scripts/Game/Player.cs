@@ -2,6 +2,8 @@ using UnityEngine;
 using System.Collections;
 
 public class Player : UnitBaseEntity {
+    public GameObject musicJukebox; //when no music is available, instantiate this
+
     public float force;
    
     private PlayerController mController;
@@ -58,6 +60,10 @@ public class Player : UnitBaseEntity {
     }
 
     protected override void SpawnStart() {
+        //check if music is available
+        if(GameObject.FindObjectOfType(typeof(MusicManager)) == null && musicJukebox != null) {
+            GameObject.Instantiate(musicJukebox);
+        }
     }
 
     void OnControllerColliderHit(ControllerColliderHit hit) {
@@ -66,6 +72,9 @@ public class Player : UnitBaseEntity {
 
     void OnHit(PlayerHealth playerHealth) {
         if(playerHealth.curHealth <= 0.0f) {
+            //save current scene
+            UserData.instance.SetString(PlayerActChangeScene.playerLastSaveScene, Application.loadedLevelName);
+
             FSM.Fsm.Event(EntityEvent.Kill);
         }
     }

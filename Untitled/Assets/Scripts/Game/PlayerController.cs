@@ -20,6 +20,7 @@ public class PlayerController : MotionBase {
     public float bodyOfsDelay = 0.25f;
 
     public float actionBoostForce;
+    public float actionBoostDelay;
 
     public float idleThreshold = 1.0f;
 
@@ -150,6 +151,8 @@ public class PlayerController : MotionBase {
     void OnInputAction(InputManager.Info data) {
         if(data.state == InputManager.State.Pressed) {
             if(!mActionActive) {
+                StopAllCoroutines();
+
                 if(SoundPlayerGlobal.instance != null)
                     SoundPlayerGlobal.instance.Play("act");
 
@@ -159,7 +162,25 @@ public class PlayerController : MotionBase {
 
                 mActionActive = true;
                 StartCoroutine(DoActionIntensify());
+
+                if(actionBoostDelay > 0.0f && actionBoostForce > 0.0f)
+                    StartCoroutine(DoBoost());
             }
+        }
+    }
+
+    IEnumerator DoBoost() {
+        float curTime = 0.0f;
+
+        //mBoostDelay
+        while(curTime < actionBoostDelay) {
+            //boost
+            if(mCurMove != Vector2.zero) {
+                body.AddForce(mCurMove.normalized * actionBoostForce);
+            }
+
+            curTime += Time.fixedDeltaTime;
+            yield return mWaitUpdate;
         }
     }
     
@@ -167,12 +188,7 @@ public class PlayerController : MotionBase {
         float curTime = 0.0f;
 
         actionObject.SetActive(true);
-
-        //boost
-        if(actionBoostForce > 0.0f && mCurMove != Vector2.zero) {
-            body.AddForce(mCurMove.normalized * actionBoostForce);
-        }
-
+                
         //intensify light
         while(curTime < intensifyDelay) {
             float t = curTime / intensifyDelay;
