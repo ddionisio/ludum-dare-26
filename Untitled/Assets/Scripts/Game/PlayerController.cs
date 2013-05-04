@@ -60,9 +60,11 @@ public class PlayerController : MotionBase {
                 if(input != null) {
                     if(value) {
                         input.AddButtonCall(0, InputAction.Action, OnInputAction);
+                        input.AddButtonCall(0, InputAction.Escape, OnInputPause);
                     }
                     else {
                         input.RemoveButtonCall(0, InputAction.Action, OnInputAction);
+                        input.RemoveButtonCall(0, InputAction.Escape, OnInputPause);
                     }
                 }
             }
@@ -82,6 +84,14 @@ public class PlayerController : MotionBase {
         actionObject.SetActive(false);
 
         StopAllCoroutines();
+    }
+
+    void OnScenePause() {
+        inputEnabled = false;
+    }
+
+    void OnSceneResume() {
+        inputEnabled = true;
     }
 
     void OnDisable() {
@@ -148,18 +158,23 @@ public class PlayerController : MotionBase {
         base.FixedUpdate();
     }
 
+    void OnInputPause(InputManager.Info data) {
+        if(data.state == InputManager.State.Pressed) {
+            UIModalManager.instance.ModalOpen("options");
+        }
+    }
+
     void OnInputAction(InputManager.Info data) {
         if(data.state == InputManager.State.Pressed) {
-            if(!mActionActive) {
+            if(curActSensor != null) {
+                curActSensor.Action(this);
+            }
+            else if(!mActionActive) {
                 StopAllCoroutines();
 
                 if(SoundPlayerGlobal.instance != null)
                     SoundPlayerGlobal.instance.Play("act");
-
-                if(curActSensor != null) {
-                    curActSensor.Action(this);
-                }
-
+                                
                 mActionActive = true;
                 StartCoroutine(DoActionIntensify());
 
