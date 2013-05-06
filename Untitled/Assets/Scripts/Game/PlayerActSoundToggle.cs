@@ -29,8 +29,12 @@ public class PlayerActSoundToggle : PlayerActSensor {
 
         Main.instance.userSettings.isSoundEnable = !Main.instance.userSettings.isSoundEnable;
 
-        if(Main.instance.userSettings.isSoundEnable)
+        if(Main.instance.userSettings.isSoundEnable) {
             Main.instance.userSettings.volume = 1.0f; //just being safe...
+
+            if(SoundPlayerGlobal.instance != null)
+                SoundPlayerGlobal.instance.Play("tele");
+        }
 
         RefreshText();
     }

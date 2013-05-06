@@ -7,7 +7,7 @@ public class PlayerActSensor : SensorSingle<PlayerController> {
 
     private PlayMakerFSM mFSM;
 
-    void Awake() {
+    protected virtual void Awake() {
         mFSM = GetComponent<PlayMakerFSM>();
     }
 

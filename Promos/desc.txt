@@ -1,0 +1,9 @@
+An epic journey of a circle in search of lost treasures and love.
+
+Controls:
+
+arrow keys or WASD - Move circle.
+Spacebar or Enter - Interact with the golden flower.  Boosts for a short time. Repel evil squares.
+Esc - Brings up the menu. Exit puts you back at the beginning.
+
+After the first level, everything you touch or touches you is harmful.  You'll know this when the screen starts blurring.  So watch out!

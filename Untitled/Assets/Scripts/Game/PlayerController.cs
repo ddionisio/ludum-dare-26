@@ -24,6 +24,10 @@ public class PlayerController : MotionBase {
 
     public float idleThreshold = 1.0f;
 
+    public float helpPopUpDelay = 3.0f;
+    public string helpPopUpShowAnim = "show";
+    public string helpPopUpHideAnim = "hide";
+
     private bool mInputEnabled = false;
 
     private bool mActionActive = false;
@@ -41,6 +45,10 @@ public class PlayerController : MotionBase {
 
     private Vector2 mLastIdlePos;
     private bool mIdleCheck;
+
+    private GameObject mHelpPopUp;
+    private bool mHelpPopUpActive = false;
+    private bool mHelpPopUpShowDelay = false;
 
     [System.NonSerialized]
     public PlayerActSensor curActSensor;
@@ -60,15 +68,20 @@ public class PlayerController : MotionBase {
                 if(input != null) {
                     if(value) {
                         input.AddButtonCall(0, InputAction.Action, OnInputAction);
-                        input.AddButtonCall(0, InputAction.Escape, OnInputPause);
                     }
                     else {
                         input.RemoveButtonCall(0, InputAction.Action, OnInputAction);
-                        input.RemoveButtonCall(0, InputAction.Escape, OnInputPause);
                     }
                 }
             }
         }
+    }
+
+    public void SpawnStart() {
+        if(mHelpPopUp == null)
+            mHelpPopUp = GameObject.FindGameObjectWithTag("HelpPopUp");
+
+        HelpPopUpShow();
     }
 
     public void ResetState() {
@@ -83,15 +96,21 @@ public class PlayerController : MotionBase {
 
         actionObject.SetActive(false);
 
+        HelpPopUpCancel();
+                
         StopAllCoroutines();
     }
 
     void OnScenePause() {
         inputEnabled = false;
+
+        HelpPopUpCancel();
     }
 
     void OnSceneResume() {
-        inputEnabled = true;
+        inputEnabled = true;    
+
+        HelpPopUpShow();
     }
 
     void OnDisable() {
@@ -131,6 +150,60 @@ public class PlayerController : MotionBase {
             }
         }
     }
+
+    void HelpPopUpShow() {
+        if(!mHelpPopUpActive && mHelpPopUp != null) {
+            //Debug.Log("show");
+            mHelpPopUpActive = true;
+            mHelpPopUp.SetActive(true);
+
+            if(mHelpPopUp.animation != null && !string.IsNullOrEmpty(helpPopUpShowAnim) && !mHelpPopUp.animation.IsPlaying(helpPopUpShowAnim))
+                mHelpPopUp.animation.Play(helpPopUpShowAnim, AnimationPlayMode.Queue);
+        }
+    }
+
+    void HelpPopUpShowDelay() {
+        if(!mHelpPopUpActive && !mHelpPopUpShowDelay) {
+            //Debug.Log("show delay");
+            StartCoroutine("HelpPopUpShowDelayIt");
+        }
+    }
+
+    void HelpPopUpHide() {
+        if(mHelpPopUpActive) {
+            if(mHelpPopUp.animation != null && !string.IsNullOrEmpty(helpPopUpHideAnim)) {
+                if(!mHelpPopUp.animation.IsPlaying(helpPopUpHideAnim)) {
+                    mHelpPopUp.animation.Play(helpPopUpHideAnim, AnimationPlayMode.Queue);
+                }
+            }
+            else if(mHelpPopUp.activeSelf) {
+                mHelpPopUp.SetActive(false);
+            }
+
+            //Debug.Log("hide deactive");
+
+            mHelpPopUpActive = false;
+        }
+
+        if(mHelpPopUpShowDelay) {
+            //Debug.Log("hide remove show delay");
+
+            mHelpPopUpShowDelay = false;
+            StopCoroutine("HelpPopUpShowDelayIt");
+        }
+    }
+
+    void HelpPopUpCancel() {
+        mHelpPopUpActive = false;
+
+        if(mHelpPopUp != null)
+            mHelpPopUp.SetActive(false);
+
+        if(mHelpPopUpShowDelay) {
+            mHelpPopUpShowDelay = false;
+            StopCoroutine("HelpPopUpShowDelayIt");
+        }
+    }
     
     protected override void FixedUpdate() {
         if(mInputEnabled) {
@@ -141,13 +214,19 @@ public class PlayerController : MotionBase {
 
             if(mCurMove.x != 0.0f || mCurMove.y != 0.0f) {
                 body.AddForce(mCurMove * force);
-            }
-            else if(!mIdleCheck) {
-                mPlayer.health.idleRegen = true;
-                mLastIdlePos = transform.position;
-                mIdleCheck = true;
 
-                //Debug.Log("set to idle regen");
+                HelpPopUpHide();
+            }
+            else {
+                if(!mIdleCheck) {
+                    mPlayer.health.idleRegen = true;
+                    mLastIdlePos = transform.position;
+                    mIdleCheck = true;
+
+                    //Debug.Log("set to idle regen");
+                }
+
+                HelpPopUpShowDelay();
             }
 
             mBodyOfsStart = circleBody.localPosition;
@@ -158,19 +237,13 @@ public class PlayerController : MotionBase {
         base.FixedUpdate();
     }
 
-    void OnInputPause(InputManager.Info data) {
-        if(data.state == InputManager.State.Pressed) {
-            UIModalManager.instance.ModalOpen("options");
-        }
-    }
-
     void OnInputAction(InputManager.Info data) {
         if(data.state == InputManager.State.Pressed) {
             if(curActSensor != null) {
                 curActSensor.Action(this);
             }
             else if(!mActionActive) {
-                StopAllCoroutines();
+                StopCoroutine("DoBoost");
 
                 if(SoundPlayerGlobal.instance != null)
                     SoundPlayerGlobal.instance.Play("act");
@@ -179,8 +252,28 @@ public class PlayerController : MotionBase {
                 StartCoroutine(DoActionIntensify());
 
                 if(actionBoostDelay > 0.0f && actionBoostForce > 0.0f)
-                    StartCoroutine(DoBoost());
+                    StartCoroutine("DoBoost");
             }
+
+            HelpPopUpHide();
+        }
+    }
+
+    IEnumerator HelpPopUpShowDelayIt() {
+        if(mHelpPopUp != null) {
+            mHelpPopUpShowDelay = true;
+
+            while(mHelpPopUp.animation != null && mHelpPopUp.animation.isPlaying)
+                yield return new WaitForFixedUpdate();
+
+            yield return new WaitForSeconds(helpPopUpDelay);
+
+            HelpPopUpShow();
+
+            mHelpPopUpShowDelay = false;
+        }
+        else {
+            yield break;
         }
     }
 
@@ -191,7 +284,7 @@ public class PlayerController : MotionBase {
         while(curTime < actionBoostDelay) {
             //boost
             if(mCurMove != Vector2.zero) {
-                body.AddForce(mCurMove.normalized * actionBoostForce);
+                body.AddForce(mCurMove * actionBoostForce);
             }
 
             curTime += Time.fixedDeltaTime;
