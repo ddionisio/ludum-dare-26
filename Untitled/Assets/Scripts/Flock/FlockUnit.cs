@@ -336,12 +336,14 @@ public class FlockUnit : MotionBase {
     }
 
     private void SeekPathStart(Vector3 start, Vector3 dest) {
-        mSeek.StartPath(start, dest);
-        mSeekPath = null;
-        mCurSeekDelay = 0.0f;
-        mSeekStarted = true;
+        if(AstarPath.active != null) {
+            mSeek.StartPath(start, dest);
+            mSeekPath = null;
+            mCurSeekDelay = 0.0f;
+            mSeekStarted = true;
 
-        ApplyState(State.Idle);
+            ApplyState(State.Idle);
+        }
     }
 
     private void SeekPathStop() {
