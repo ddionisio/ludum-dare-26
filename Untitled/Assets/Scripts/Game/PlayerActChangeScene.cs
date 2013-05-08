@@ -9,6 +9,7 @@ public class PlayerActChangeScene : PlayerActSensor {
     public const string playerLastSaveScene = "plastscene";
 
     public const string playerFlowerFormat = "pflower_{0}";
+    public const string playerTimeFormat = "ptime_{0}";
 
     public string toScene;
     public bool useLastSavedScene; //set to true in game over screen
@@ -38,16 +39,19 @@ public class PlayerActChangeScene : PlayerActSensor {
     private PlayerController mPlayerControl;
 
     public static int GetFlowerValue(int ind) {
-        if(SceneState.instance != null) {
-            return SceneState.instance.GetGlobalValue(string.Format(playerFlowerFormat, ind));
-        }
-        return 0;
+        return UserData.instance.GetInt(string.Format(playerFlowerFormat, ind), 0);
     }
 
     public static void SetFlowerValue(int ind, int val) {
-        if(SceneState.instance != null) {
-            SceneState.instance.SetGlobalValue(string.Format(playerFlowerFormat, ind), val, true);
-        }
+        UserData.instance.SetInt(string.Format(playerFlowerFormat, ind), val);
+    }
+
+    public static float GetTimeValue(int ind) {
+        return UserData.instance.GetFloat(string.Format(playerTimeFormat, ind), 9999.0f);
+    }
+
+    public static void SetTimeValue(int ind, float val) {
+        UserData.instance.SetFloat(string.Format(playerTimeFormat, ind), val);
     }
 
     protected override void UnitEnter(PlayerController unit) {
@@ -156,6 +160,15 @@ public class PlayerActChangeScene : PlayerActSensor {
                 int lastNumFlowers = GetFlowerValue(game_ex);
                 if(curNumFlowers > lastNumFlowers)
                     SetFlowerValue(game_ex, curNumFlowers);
+
+                //save time if less
+                float curTime = player.curPlayTime;
+                float lastTime = GetTimeValue(game_ex);
+                if(curTime < lastTime) {
+                    SetTimeValue(game_ex, curTime);
+                }
+
+                Debug.Log("You took " + curTime + " to finish.");
             }
 
             //remember where to place the player

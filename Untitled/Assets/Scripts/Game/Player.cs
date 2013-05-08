@@ -31,6 +31,8 @@ public class Player : UnitBaseEntity {
 
     public List<Transform> flowers { get { return mFlowers; } }
 
+    private float mPlayStartTime;
+
     public bool inputEnabled {
         get { return mInputEnabled; }
         set {
@@ -70,11 +72,19 @@ public class Player : UnitBaseEntity {
         }
     }
 
+    public float curPlayTime {
+        get {
+            return Time.time - mPlayStartTime;
+        }
+    }
+
     public override void SpawnFinish() {
         //enable input
         mController.inputEnabled = true;
 
         mSpawnFinished = true;
+
+        mPlayStartTime = Time.time;
     }
 
     protected override void OnDespawned() {

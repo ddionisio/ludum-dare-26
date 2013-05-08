@@ -23,6 +23,8 @@ public class PlayerHealth : MonoBehaviour {
     public float regenRate = 5.0f; //per second
     public float regenRateIdle = 0.1f;
 
+    public float hurtDelay = 1.0f;
+
     public event OnHit hitCallback;
 
     private float mCurHealth = 0.0f;
@@ -32,6 +34,8 @@ public class PlayerHealth : MonoBehaviour {
     private State mCurState = State.None;
 
     private M8.ImageEffects.Tile mTiler;
+
+    private UIHealth mHealthUI;
 
     [System.NonSerialized]
     public bool idleRegen = false;
@@ -52,18 +56,24 @@ public class PlayerHealth : MonoBehaviour {
         if(mCurHealth <= 0.0f) {
             mCurHealth = 0.0f;
 
-            if(mCurState != State.Dead)
+            if(mCurState != State.Dead) {
                 SetState(State.Dead);
+
+                if(hitCallback != null)
+                    hitCallback(this);
+            }
         }
         else {
             SetState(State.RegenWait);
+
+            if(hitCallback != null)
+                hitCallback(this);
+
+            if(SoundPlayerGlobal.instance != null)
+                SoundPlayerGlobal.instance.Play("hurt");
         }
 
-        if(hitCallback != null)
-            hitCallback(this);
-
-        if(SoundPlayerGlobal.instance != null)
-            SoundPlayerGlobal.instance.Play("hurt");
+        ApplyHealthText();
     }
 
     void OnDestroy() {
@@ -78,11 +88,21 @@ public class PlayerHealth : MonoBehaviour {
 
     // Use this for initialization
     void Start() {
-
     }
 
     // Update is called once per frame
     void Update() {
+        //bad
+        if(mHealthUI == null) {
+            if(UIModalManager.instance != null) {
+                mHealthUI = UIModalManager.instance.transform.parent.GetComponentInChildren<UIHealth>();
+                if(mHealthUI != null) {
+                    mHealthUI.Attach(transform);
+                    mHealthUI.gameObject.SetActive(mCurHealth < maxHealth);
+                }
+            }
+        }
+
         switch(mCurState) {
             case State.None:
                 break;
@@ -100,8 +120,12 @@ public class PlayerHealth : MonoBehaviour {
                     mCurHealth = maxHealth;
                     SetState(State.None);
                 }
-                else if(mTiler != null) {
-                    mTiler.numTiles = minTileRes + (maxTileRes - minTileRes) * (mCurHealth / maxHealth);
+                else {
+                    if(mTiler != null) {
+                        mTiler.numTiles = minTileRes + (maxTileRes - minTileRes) * (mCurHealth / maxHealth);
+                    }
+
+                    ApplyHealthText();
                 }
                 break;
 
@@ -120,9 +144,15 @@ public class PlayerHealth : MonoBehaviour {
         }
     }
 
+    private void ApplyHealthText() {
+        if(mHealthUI != null) {
+            mHealthUI.label.text = Mathf.RoundToInt((mCurHealth / maxHealth) * 100.0f).ToString() + "%";
+        }
+    }
+
     private void SetState(State newState) {
         //undo previous stuff
-
+        
         //new stuff
         mCurState = newState;
 
@@ -136,8 +166,11 @@ public class PlayerHealth : MonoBehaviour {
             CameraController cc = CameraController.instance;
             if(cc != null) {
                 mTiler = cc.mainCamera.GetComponent<M8.ImageEffects.Tile>();
-                mTiler.enabled = true;
             }
+        }
+
+        if(mHealthUI != null) {
+            mHealthUI.gameObject.SetActive(mCurHealth < maxHealth);
         }
                 
         switch(newState) {
@@ -147,18 +180,46 @@ public class PlayerHealth : MonoBehaviour {
                 }
 
                 mCurTime = 0.0f;
+
+                StopAllCoroutines();
+                StartCoroutine(HurtMe());
                 break;
 
             case State.Regen:
                 break;
 
             case State.Dead:
+                StopAllCoroutines();
+
                 if(mTiler != null) {
+                    mTiler.enabled = true;
                     mTiler.numTiles = minTileRes;
                 }
 
                 mCurTime = 0.0f;
                 break;
         }
+    }
+
+    IEnumerator HurtMe() {
+        if(mTiler != null) {
+            mTiler.enabled = true;
+
+            float curTime = 0.0f;
+
+            while(curTime < hurtDelay) {
+                curTime += Time.fixedDeltaTime;
+
+                float t = Mathf.Sin(M8.MathUtil.TwoPI * (curTime / hurtDelay));
+
+                mTiler.numTiles = maxTileRes + t * (minTileRes - maxTileRes);
+
+                yield return new WaitForFixedUpdate();
+            }
+
+            mTiler.enabled = false;
+        }
+
+        yield break;
     }
 }

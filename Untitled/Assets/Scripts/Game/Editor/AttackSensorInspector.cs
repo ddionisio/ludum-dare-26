@@ -7,6 +7,8 @@ public class AttackSensorInspector : Editor {
     private string[] mMasks = null;
 
     public override void OnInspectorGUI() {
+        GUI.changed = false;
+
         if(mMasks == null) {
             mMasks = M8.Editor.Utility.GenerateGenericMaskString();
         }
@@ -21,5 +23,8 @@ public class AttackSensorInspector : Editor {
 
         if(input.angleCheck)
             input.angle = EditorGUILayout.Slider("Angle", input.angle, 0.0f, 359.0f);
+
+        if(GUI.changed)
+            EditorUtility.SetDirty(target);
     }
 }

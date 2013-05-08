@@ -7,7 +7,6 @@ public class CollisionPlayerHurt : MonoBehaviour {
     public float pushForce = 0.0f;
 
     private WaitForSeconds mHurtPeriodWait;
-    private Player mPlayer;
     private bool mHurtPeroidActive = false;
 
     void Awake() {
@@ -25,29 +24,18 @@ public class CollisionPlayerHurt : MonoBehaviour {
                 }
 
                 if(hurtAmount > 0.0f && !mHurtPeroidActive) {
-                    mPlayer = player;
-                    StartCoroutine(HurtPeriod());
+                    StartCoroutine(HurtPeriod(player));
                 }
             }
         }
     }
 
-    void OnCollisionExit(Collision col) {
-        foreach(ContactPoint contact in col.contacts) {
-            Player player = contact.otherCollider.GetComponent<Player>();
-            if(player != null && player == mPlayer) {
-                mPlayer = null;
-            }
-        }
-    }
-
-    IEnumerator HurtPeriod() {
+    IEnumerator HurtPeriod(Player player) {
         mHurtPeroidActive = true;
 
-        while(mPlayer != null) {
-            mPlayer.health.Hit(hurtAmount);
-            yield return mHurtPeriodWait;
-        }
+        player.health.Hit(hurtAmount);
+
+        yield return mHurtPeriodWait;
 
         mHurtPeroidActive = false;
     }

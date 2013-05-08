@@ -232,6 +232,18 @@ public class PlayerController : MotionBase {
             mBodyOfsStart = circleBody.localPosition;
             mBodyOfsEnd = mCurMove * bodyOfsLength;
             mBodyCurTime = 0.0f;
+
+            if(input.IsDown(0, InputAction.Action) && curActSensor == null && !mActionActive) {
+                StopCoroutine("DoBoost");
+                                
+                mActionActive = true;
+                StartCoroutine(DoActionIntensify());
+
+                if(actionBoostDelay > 0.0f && actionBoostForce > 0.0f)
+                    StartCoroutine("DoBoost");
+
+                HelpPopUpHide();
+            }
         }
 
         base.FixedUpdate();
@@ -242,17 +254,9 @@ public class PlayerController : MotionBase {
             if(curActSensor != null) {
                 curActSensor.Action(this);
             }
-            else if(!mActionActive) {
-                StopCoroutine("DoBoost");
-
+            else {
                 if(SoundPlayerGlobal.instance != null)
                     SoundPlayerGlobal.instance.Play("act");
-                                
-                mActionActive = true;
-                StartCoroutine(DoActionIntensify());
-
-                if(actionBoostDelay > 0.0f && actionBoostForce > 0.0f)
-                    StartCoroutine("DoBoost");
             }
 
             HelpPopUpHide();

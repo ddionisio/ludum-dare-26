@@ -8,6 +8,8 @@ public class FlockFilterInspector : Editor {
     private string[] mMasks = null;
 
     public override void OnInspectorGUI() {
+        GUI.changed = false;
+
         if(mMasks == null) {
             mMasks = M8.Editor.Utility.GenerateGenericMaskString();
         }
@@ -17,5 +19,8 @@ public class FlockFilterInspector : Editor {
         input.id = EditorGUILayout.IntField("id", input.id);
 
         input.avoidTypeFilter = EditorGUILayout.MaskField("Avoid Filter", input.avoidTypeFilter, mMasks);
+
+        if(GUI.changed)
+            EditorUtility.SetDirty(target);
     }
 }
