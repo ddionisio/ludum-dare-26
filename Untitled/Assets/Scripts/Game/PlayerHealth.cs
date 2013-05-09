@@ -37,11 +37,14 @@ public class PlayerHealth : MonoBehaviour {
 
     private UIHealth mHealthUI;
 
+    private int mNumHits = 0;
+
     [System.NonSerialized]
     public bool idleRegen = false;
 
     public float curHealth { get { return mCurHealth; } }
     public State curState { get { return mCurState; } }
+    public int numHits { get { return mNumHits; } }
 
     public void ResetStats() {
         mCurHealth = maxHealth;
@@ -49,31 +52,38 @@ public class PlayerHealth : MonoBehaviour {
         SetState(State.None);
 
         idleRegen = false;
+
+        mNumHits = 0;
     }
 
     public void Hit(float amt) {
-        mCurHealth -= amt;
-        if(mCurHealth <= 0.0f) {
-            mCurHealth = 0.0f;
+        if(amt != 0.0f) {
+            mCurHealth -= amt;
 
-            if(mCurState != State.Dead) {
-                SetState(State.Dead);
+            if(mCurHealth <= 0.0f) {
+                mCurHealth = 0.0f;
+
+                if(mCurState != State.Dead) {
+                    SetState(State.Dead);
+
+                    if(hitCallback != null)
+                        hitCallback(this);
+                }
+            }
+            else {
+                SetState(State.RegenWait);
 
                 if(hitCallback != null)
                     hitCallback(this);
+
+                if(SoundPlayerGlobal.instance != null)
+                    SoundPlayerGlobal.instance.Play("hurt");
+
+                mNumHits++;
             }
+
+            ApplyHealthText();
         }
-        else {
-            SetState(State.RegenWait);
-
-            if(hitCallback != null)
-                hitCallback(this);
-
-            if(SoundPlayerGlobal.instance != null)
-                SoundPlayerGlobal.instance.Play("hurt");
-        }
-
-        ApplyHealthText();
     }
 
     void OnDestroy() {

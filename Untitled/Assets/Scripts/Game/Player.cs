@@ -78,6 +78,22 @@ public class Player : UnitBaseEntity {
         }
     }
 
+    public void Exit() {
+        if(Application.loadedLevelName == "start") {
+            Application.Quit();
+        }
+        else if(Application.loadedLevelName == "end") {
+            Main.instance.sceneManager.LoadScene("start");
+        }
+        else if(Application.loadedLevelName == "game_ex_end") {
+            //TODO: make sure to properly save data and determine which start_ex to load
+            Main.instance.sceneManager.LoadLastSceneStack();
+        }
+        else {
+            Main.instance.sceneManager.LoadLastSceneStack();
+        }
+    }
+
     public override void SpawnFinish() {
         //enable input
         mController.inputEnabled = true;

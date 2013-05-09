@@ -10,6 +10,7 @@ public class PlayerActChangeScene : PlayerActSensor {
 
     public const string playerFlowerFormat = "pflower_{0}";
     public const string playerTimeFormat = "ptime_{0}";
+    public const string playerNumHitFormat = "phit_{0}";
 
     public string toScene;
     public bool useLastSavedScene; //set to true in game over screen
@@ -52,6 +53,14 @@ public class PlayerActChangeScene : PlayerActSensor {
 
     public static void SetTimeValue(int ind, float val) {
         UserData.instance.SetFloat(string.Format(playerTimeFormat, ind), val);
+    }
+
+    public static int GetNumHitValue(int ind) {
+        return UserData.instance.GetInt(string.Format(playerNumHitFormat, ind), 999);
+    }
+
+    public static void SetNumHitValue(int ind, int val) {
+        UserData.instance.SetInt(string.Format(playerNumHitFormat, ind), val);
     }
 
     protected override void UnitEnter(PlayerController unit) {
@@ -168,7 +177,15 @@ public class PlayerActChangeScene : PlayerActSensor {
                     SetTimeValue(game_ex, curTime);
                 }
 
+                //save hits if less
+                int curHits = player.health.numHits;
+                int lastHits = GetNumHitValue(game_ex);
+                if(curHits < lastHits) {
+                    SetNumHitValue(game_ex, curHits);
+                }
+
                 Debug.Log("You took " + curTime + " to finish.");
+                Debug.Log("Num hits you took: " + curHits);
             }
 
             //remember where to place the player

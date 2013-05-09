@@ -14,6 +14,8 @@ public class UIOptions : UIController {
 
     public string exitScene;
 
+    private Player mPlayer;
+
     protected override void OnActive(bool active) {
     }
 
@@ -35,6 +37,11 @@ public class UIOptions : UIController {
 
         soundLabel.text = string.Format(soundFormat, Main.instance.userSettings.isSoundEnable ? "YES" : "NO");
         musicLabel.text = string.Format(musicFormat, Main.instance.userSettings.isMusicEnable ? "YES" : "NO");
+
+        GameObject playerGo = GameObject.FindGameObjectWithTag("Player");
+        if(playerGo != null) {
+            mPlayer = playerGo.GetComponentInChildren<Player>();
+        }
     }
 
     IEnumerator OnPause() {
@@ -69,8 +76,12 @@ public class UIOptions : UIController {
     }
 
     void Exit(GameObject go) {
-        if(Application.loadedLevelName != exitScene) {
-            UIModalManager.instance.ModalCloseTop();
+        UIModalManager.instance.ModalCloseTop();
+
+        if(mPlayer != null) {
+            mPlayer.Exit();
+        }
+        else if(Application.loadedLevelName != exitScene) {
             Main.instance.sceneManager.LoadScene(exitScene);
         }
     }
