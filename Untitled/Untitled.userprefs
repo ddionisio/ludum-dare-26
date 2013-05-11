@@ -1,17 +1,17 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\Game\PlayerActChangeScene.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\Game\EndSpawnFlowers.cs">
     <Files>
       <File FileName="Assets\Scripts\Actions\Flock\FlockSetTarget.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\Game\AttackSensor.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\Game\FlockActionController.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\Game\UnitEntity.cs" Line="1" Column="1" />
       <File FileName="Assets\M8\Scripts\Game\SensorSingle.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\Game\Player.cs" Line="51" Column="1" />
+      <File FileName="Assets\Scripts\Game\Player.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\Flock\FlockUnit.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\Flock\FlockFilter.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\Game\PlayerActSoundToggle.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\Game\PlayerActChangeScene.cs" Line="63" Column="1" />
+      <File FileName="Assets\Scripts\Game\PlayerActChangeScene.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\Game\ActionListener.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\Game\ActionTarget.cs" Line="1" Column="1" />
       <File FileName="Assets\M8PlayMaker\Game\WaypointGetByName.cs" Line="1" Column="1" />
@@ -20,11 +20,13 @@
       <File FileName="Assets\M8\Scripts\Core\UserData.cs" Line="1" Column="1" />
       <File FileName="Assets\M8\Scripts\Core\SceneState.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\Game\PlayerLevelStartPoint.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Game\EndSpawnFlowers.cs" Line="94" Column="28" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore>
-      <Breakpoint file="C:\Lab\ludum-dare-26\Untitled\Assets\Scripts\Game\PlayerActChangeScene.cs" line="39" />
+      <Breakpoint file="C:\Lab\ludum-dare-26\Untitled\Assets\Scripts\Game\EndSpawnFlowers.cs" line="53" />
+      <Breakpoint file="C:\Lab\ludum-dare-26\Untitled\Assets\M8\Scripts\Gizmos\GizmoHelperBox.cs" line="14" />
     </BreakpointStore>
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />

@@ -86,12 +86,47 @@ public class Player : UnitBaseEntity {
             Main.instance.sceneManager.LoadScene("start");
         }
         else if(Application.loadedLevelName == "game_ex_end") {
-            //TODO: make sure to properly save data and determine which start_ex to load
-            Main.instance.sceneManager.LoadLastSceneStack();
+            ExitEnding();
         }
         else {
             Main.instance.sceneManager.LoadLastSceneStack();
         }
+    }
+
+    public void ExitEnding() {
+        SceneState ss = SceneState.instance;
+
+        /*int stage = SceneState.instance.GetGlobalValue(PlayerActChangeStage.stageSceneKey);
+                SceneState.instance.SetGlobalFlag(playerStageMaxedFlowers, stage, true, true);*/
+
+        int curStage = ss.GetGlobalValue(PlayerActChangeStage.stageSceneKey);
+
+        int maxStage = ss.GetGlobalValue("maxStage");
+        int maxLevel = ss.GetGlobalValue(UIHiscore.maxLevelSceneKey);
+        
+        //check if all flowers are collected for all levels except the last one
+        int numLevelsCompleted = 0;
+
+        for(int i = 1; i < maxLevel; i++) {
+            if(ss.CheckGlobalFlag(PlayerActChangeScene.playerLevelMaxedFlowers, i)) {
+                numLevelsCompleted++;
+            }
+        }
+
+        //secret stage
+        if(numLevelsCompleted == maxLevel - 1) {
+            curStage = maxStage - 1;
+        }
+        else if(curStage == maxStage - 2) {
+            curStage = 0;
+        }
+        else if(curStage < maxStage - 2) {
+            curStage++;
+        }
+
+        ss.SetGlobalValue(PlayerActChangeStage.stageSceneKey, curStage, true);
+
+        Main.instance.sceneManager.LoadLastSceneStack();
     }
 
     public override void SpawnFinish() {

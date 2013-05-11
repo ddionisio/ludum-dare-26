@@ -7,10 +7,11 @@ public class PlayerActChangeScene : PlayerActSensor {
     public const string playerGameState = "pgame";
     public const string playerGameExState = "pexgame";
     public const string playerLastSaveScene = "plastscene";
+    public const string playerLevelMaxedFlowers = "pexflowermax";
 
     public const string playerFlowerFormat = "pflower_{0}";
     public const string playerTimeFormat = "ptime_{0}";
-    public const string playerNumHitFormat = "phit_{0}";
+    public const string playerLowestHealthFormat = "plhp_{0}";
 
     public string toScene;
     public bool useLastSavedScene; //set to true in game over screen
@@ -55,12 +56,12 @@ public class PlayerActChangeScene : PlayerActSensor {
         UserData.instance.SetFloat(string.Format(playerTimeFormat, ind), val);
     }
 
-    public static int GetNumHitValue(int ind) {
-        return UserData.instance.GetInt(string.Format(playerNumHitFormat, ind), 999);
+    public static float GetLowestHealthValue(int ind) {
+        return UserData.instance.GetFloat(string.Format(playerLowestHealthFormat, ind), 0.0f);
     }
 
-    public static void SetNumHitValue(int ind, int val) {
-        UserData.instance.SetInt(string.Format(playerNumHitFormat, ind), val);
+    public static void SetLowestHealthValue(int ind, float val) {
+        UserData.instance.SetFloat(string.Format(playerLowestHealthFormat, ind), val);
     }
 
     protected override void UnitEnter(PlayerController unit) {
@@ -119,6 +120,23 @@ public class PlayerActChangeScene : PlayerActSensor {
         if(flowerReqObject != null) {
             flowerReqObject.SetActive(false);
         }
+
+        //do a check to see if flower acquired is maxed, then add it to the stage flower maxed flags
+        StartCoroutine(DoStageFlowerMaxFlag());
+    }
+
+    IEnumerator DoStageFlowerMaxFlag() {
+        yield return new WaitForFixedUpdate();
+
+        //
+        if(game_ex > 0 && flowerCheckUsePlayerData) {
+            int numFlower = GetFlowerValue(game_ex);
+            if(numFlower >= flowerCheckMax) {
+                SceneState.instance.SetGlobalFlag(playerLevelMaxedFlowers, game_ex, true, true);
+            }
+        }
+
+        yield break;
     }
 
     void Update() {
@@ -170,6 +188,11 @@ public class PlayerActChangeScene : PlayerActSensor {
                 if(curNumFlowers > lastNumFlowers)
                     SetFlowerValue(game_ex, curNumFlowers);
 
+                //save flower-maxed flag
+                if(curNumFlowers >= flowerCheckMax) {
+                    SceneState.instance.SetGlobalFlag(playerLevelMaxedFlowers, game_ex, true, true);
+                }
+
                 //save time if less
                 float curTime = player.curPlayTime;
                 float lastTime = GetTimeValue(game_ex);
@@ -177,15 +200,15 @@ public class PlayerActChangeScene : PlayerActSensor {
                     SetTimeValue(game_ex, curTime);
                 }
 
-                //save hits if less
-                int curHits = player.health.numHits;
-                int lastHits = GetNumHitValue(game_ex);
-                if(curHits < lastHits) {
-                    SetNumHitValue(game_ex, curHits);
+                //save hp if greater
+                float curLowestHP = player.health.lastLowestHealth;
+                float lastLowestHP = GetLowestHealthValue(game_ex);
+                if(curLowestHP > lastLowestHP) {
+                    SetLowestHealthValue(game_ex, curLowestHP);
                 }
 
                 Debug.Log("You took " + curTime + " to finish.");
-                Debug.Log("Num hits you took: " + curHits);
+                Debug.Log("Lowest HP: " + curLowestHP);
             }
 
             //remember where to place the player

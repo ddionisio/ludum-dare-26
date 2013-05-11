@@ -37,14 +37,14 @@ public class PlayerHealth : MonoBehaviour {
 
     private UIHealth mHealthUI;
 
-    private int mNumHits = 0;
+    private float mLastLowestHealth = 0.0f;
 
     [System.NonSerialized]
     public bool idleRegen = false;
 
     public float curHealth { get { return mCurHealth; } }
     public State curState { get { return mCurState; } }
-    public int numHits { get { return mNumHits; } }
+    public float lastLowestHealth { get { return mLastLowestHealth; } }
 
     public void ResetStats() {
         mCurHealth = maxHealth;
@@ -53,7 +53,7 @@ public class PlayerHealth : MonoBehaviour {
 
         idleRegen = false;
 
-        mNumHits = 0;
+        mLastLowestHealth = maxHealth;
     }
 
     public void Hit(float amt) {
@@ -79,7 +79,8 @@ public class PlayerHealth : MonoBehaviour {
                 if(SoundPlayerGlobal.instance != null)
                     SoundPlayerGlobal.instance.Play("hurt");
 
-                mNumHits++;
+                if(mCurHealth < mLastLowestHealth)
+                    mLastLowestHealth = mCurHealth;
             }
 
             ApplyHealthText();

@@ -13,7 +13,7 @@ public class PlayerActSensor : SensorSingle<PlayerController> {
 
     protected override bool UnitVerify(PlayerController unit) {
         //check if player already has a current act sensor
-        return unit.curActSensor == null || unit.curActSensor == this;
+        return true;// unit.curActSensor == null || unit.curActSensor == this;
     }
 
     protected override void UnitEnter(PlayerController unit) {

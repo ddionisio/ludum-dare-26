@@ -11,10 +11,10 @@ public class UIHiscore : MonoBehaviour {
     public tk2dTextMesh hi;
     public tk2dTextMesh prev;
 
-    public int hitCriteria = 12; //if less, bonus!
+    public float hpCriteria = 50.0f; //if greater, bonus
     
-    public int hitBonus = 100; //per hit
-    public float timeBonus = 50; //per second
+    public float hpBonus = 100.0f; //per hp
+    public float timeBonus = 50.0f; //per second
     public int flowerBonus = 500; //per flower
     public int levelCompleteBonus = 1000;
 
@@ -35,7 +35,9 @@ public class UIHiscore : MonoBehaviour {
 
         int hiTop, hiBottom;
 
-        if(score > curHi) {
+        bool newHi = score > curHi;
+
+        if(newHi) {
             ud.SetInt(scoreKey, score);
 
             hiTop = score;
@@ -46,10 +48,16 @@ public class UIHiscore : MonoBehaviour {
             hiBottom = score;
         }
 
-        hi.text = string.Format("HI {0}", hiTop.ToString("D7"));
-        hi.Commit();
+        if(newHi) {
+            hi.text = string.Format("HI {0} *", hiTop.ToString("D7"));
+            prev.text = hiBottom.ToString("D7");
+        }
+        else {
+            hi.text = string.Format("HI {0}", hiTop.ToString("D7"));
+            prev.text = string.Format("{0} *", hiBottom.ToString("D7"));
+        }
 
-        prev.text = hiBottom.ToString("D7");
+        hi.Commit();
         prev.Commit();
 
         yield break;
@@ -67,21 +75,24 @@ public class UIHiscore : MonoBehaviour {
 
             bool levelComplete = ss.CheckGlobalFlag(PlayerActChangeScene.playerGameExState, level);
             int numFlowers = PlayerActChangeScene.GetFlowerValue(level);
-            int numHits = PlayerActChangeScene.GetNumHitValue(level);
+            float lowestHP = PlayerActChangeScene.GetLowestHealthValue(level);
             
             float secs = PlayerActChangeScene.GetTimeValue(level);
             float secsPar = ss.GetGlobalValueFloat(string.Format(timeParKeyFormat, level));
 
             if(levelComplete)
                 score += levelCompleteBonus;
-
+                        
             score += flowerBonus * numFlowers;
 
-            if(secs < secsPar)
-                score += Mathf.RoundToInt((secsPar - secs) * timeBonus);
+            //bonus for time and hits is only if all flowers are collected for that level
+            if(ss.CheckGlobalFlag(PlayerActChangeScene.playerLevelMaxedFlowers, level)) {
+                if(secs < secsPar)
+                    score += Mathf.RoundToInt((secsPar - secs) * timeBonus);
 
-            if(numHits < hitCriteria)
-                score += (hitCriteria - numHits) * hitBonus;
+                if(lowestHP > hpCriteria)
+                    score += Mathf.RoundToInt((lowestHP - hpCriteria) * hpBonus);
+            }
         }
 
         return score;
