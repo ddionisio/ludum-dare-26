@@ -3,12 +3,12 @@ using HutongGames.PlayMaker;
 
 namespace Game.Actions {
     [ActionCategory("Game")]
-    [Tooltip("Check listener's target to see if it is available.")]
+    [HutongGames.PlayMaker.Tooltip("Check listener's target to see if it is available.")]
     public class ActionListenerCheckTarget : M8.PlayMaker.FSMActionComponentBase<ActionListener> {
         public FsmEvent isTrue;
         public FsmEvent isFalse;
 
-        [Tooltip("Optional: If target is set to its assigned default.")]
+        [HutongGames.PlayMaker.Tooltip("Optional: If target is set to its assigned default.")]
         public FsmEvent isDefault;
 
         public bool everyFrame;

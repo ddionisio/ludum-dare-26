@@ -3,7 +3,7 @@ using HutongGames.PlayMaker;
 
 namespace Game.Actions {
     [ActionCategory("Game")]
-    [Tooltip("damage the player")]
+    [HutongGames.PlayMaker.Tooltip("damage the player")]
     public class PlayerDamage : FsmStateAction {
         [RequiredField]
         public FsmGameObject player;

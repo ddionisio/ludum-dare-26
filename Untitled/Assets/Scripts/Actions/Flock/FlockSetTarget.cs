@@ -3,7 +3,7 @@ using HutongGames.PlayMaker;
 
 namespace Game.Actions {
     [ActionCategory("Game")]
-    [Tooltip("Set certain flags for flock unit")]
+    [HutongGames.PlayMaker.Tooltip("Set certain flags for flock unit")]
     public class FlockSetTarget : M8.PlayMaker.FSMActionComponentBase<FlockUnit> {
         [RequiredField]
         public FsmGameObject go;

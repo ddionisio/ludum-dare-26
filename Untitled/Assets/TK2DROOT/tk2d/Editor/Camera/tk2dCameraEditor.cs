@@ -393,8 +393,8 @@ namespace tk2dEditor
 					int heightTweak = 19;
 					Rect r = new Rect(previewWindowRect.x + rs.x, Camera.current.pixelHeight - (previewWindowRect.y + rs.y), rs.width, rs.height);
 					Vector2 v = new Vector2(previewWindowRect.x + rs.x, (Camera.current.pixelHeight - previewWindowRect.y - rs.height - heightTweak) + rs.y);
-					previewCamera.CopyFrom(target.camera);
-					previewCamera.projectionMatrix = target.camera.projectionMatrix; // Work around a Unity bug
+					previewCamera.CopyFrom(target.GetComponent<Camera>());
+					previewCamera.projectionMatrix = target.GetComponent<Camera>().projectionMatrix; // Work around a Unity bug
 					previewCamera.pixelRect = new Rect(v.x, v.y, r.width, r.height);
 					previewCamera.Render();
 					break;
@@ -411,7 +411,7 @@ namespace tk2dEditor
 			if (previewCamera == null)
 			{
 				GameObject go = EditorUtility.CreateGameObjectWithHideFlags("tk2dCamera", UnityEngine.HideFlags.HideAndDontSave, new System.Type[] { typeof(Camera) } );
-				previewCamera = go.camera;
+				previewCamera = go.GetComponent<Camera>();
 				previewCamera.enabled = false;
 			}
 

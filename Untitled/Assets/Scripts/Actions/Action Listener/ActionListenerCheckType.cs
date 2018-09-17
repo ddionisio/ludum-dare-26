@@ -4,7 +4,7 @@ using HutongGames.PlayMaker;
 
 namespace Game.Actions {
     [ActionCategory("Game")]
-    [Tooltip("Check the action type of the action listener.")]
+    [HutongGames.PlayMaker.Tooltip("Check the action type of the action listener.")]
     public class ActionListenerCheckType : M8.PlayMaker.FSMActionComponentBase<ActionListener> {
         public ActionType type;
 

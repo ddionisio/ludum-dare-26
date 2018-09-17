@@ -4,7 +4,7 @@ using HutongGames.PlayMaker;
 
 namespace Game.Actions {
     [ActionCategory("Game")]
-    [Tooltip("Validate range based on current action of target.")]
+    [HutongGames.PlayMaker.Tooltip("Validate range based on current action of target.")]
     public class ActionListenerCheckRange : M8.PlayMaker.FSMActionComponentBase<ActionListener> {
         public FsmEvent isTrue;
         public FsmEvent isFalse;

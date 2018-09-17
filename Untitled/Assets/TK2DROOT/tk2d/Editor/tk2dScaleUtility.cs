@@ -31,7 +31,7 @@ public static class tk2dScaleUtility
 			textMesh.Commit();
 		}
 		
-		for (int i = 0; i < node.GetChildCount(); ++i)
+		for (int i = 0; i < node.childCount; ++i)
 		{
 			BakeRecursive(node.GetChild(i), accumulatedScale);
 		}

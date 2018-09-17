@@ -31,14 +31,14 @@ public class FlockAntiField : MonoBehaviour {
     }
 
     void OnTriggerEnter(Collider t) {
-        Rigidbody body = t.rigidbody;
+        Rigidbody body = t.GetComponent<Rigidbody>();
         if(body != null) {
             mBodies.Add(body);
         }
     }
 
     void OnTriggerExit(Collider t) {
-        Rigidbody body = t.rigidbody;
+        Rigidbody body = t.GetComponent<Rigidbody>();
         if(body != null) {
             mBodies.Remove(body);
         }

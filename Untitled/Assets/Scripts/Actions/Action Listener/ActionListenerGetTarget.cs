@@ -3,9 +3,9 @@ using HutongGames.PlayMaker;
 
 namespace Game.Actions {
     [ActionCategory("Game")]
-    [Tooltip("Get listener's target and store its game object.")]
+    [HutongGames.PlayMaker.Tooltip("Get listener's target and store its game object.")]
     public class ActionListenerGetTarget : M8.PlayMaker.FSMActionComponentBase<ActionListener> {
-        [Tooltip("The game object the target belongs to.")]
+        [HutongGames.PlayMaker.Tooltip("The game object the target belongs to.")]
         [UIHint(UIHint.FsmGameObject)]
         public FsmGameObject toGameObject;
 

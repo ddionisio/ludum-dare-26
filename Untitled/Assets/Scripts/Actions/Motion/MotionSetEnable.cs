@@ -3,7 +3,7 @@ using HutongGames.PlayMaker;
 
 namespace Game.Actions {
     [ActionCategory("Game")]
-    [Tooltip("Disable the motion component.")]
+    [HutongGames.PlayMaker.Tooltip("Disable the motion component.")]
     public class MotionSetEnable : M8.PlayMaker.FSMActionComponentBase<MotionBase> {
         public FsmBool val;
 

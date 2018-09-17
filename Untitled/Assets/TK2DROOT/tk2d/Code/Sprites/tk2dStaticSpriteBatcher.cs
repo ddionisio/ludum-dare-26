@@ -297,13 +297,13 @@ public class tk2dStaticSpriteBatcher : MonoBehaviour, tk2dRuntime.ISpriteCollect
 			mesh.RecalculateBounds();
 		}
 		
-		renderer.sharedMaterials = materials.ToArray();
+		GetComponent<Renderer>().sharedMaterials = materials.ToArray();
 	}
 	
 	void BuildPhysicsMesh()
 	{
 		MeshCollider meshCollider = GetComponent<MeshCollider>();
-		if (meshCollider != null && collider != meshCollider)
+		if (meshCollider != null && GetComponent<Collider>() != meshCollider)
 		{
 			// Already has a collider
 			return;

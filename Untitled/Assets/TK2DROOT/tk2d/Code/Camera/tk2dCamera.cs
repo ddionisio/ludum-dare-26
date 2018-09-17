@@ -388,7 +388,7 @@ public class tk2dCamera : MonoBehaviour
 
 		_screenExtents.Set(left / scale.x, top / scale.y, (right - left) / scale.x, (bottom - top) / scale.y);
 		float far = mainCamera.farClipPlane;
-		float near = mainCamera.near;
+		float near = mainCamera.nearClipPlane;
 		
 		// set up externally used variables
 		orthoSize = (top - bottom) / 2.0f;
@@ -402,7 +402,7 @@ public class tk2dCamera : MonoBehaviour
 		// and on on PC/D3D
 		bool halfTexelOffset = false;
 		halfTexelOffset = (Application.platform == RuntimePlatform.WindowsPlayer ||
-						   Application.platform == RuntimePlatform.WindowsWebPlayer ||
+						   Application.platform == RuntimePlatform.WebGLPlayer ||
 						   Application.platform == RuntimePlatform.WindowsEditor);
 		
 		float halfTexelOffsetAmount = (halfTexelOffset)?1.0f:0.0f;

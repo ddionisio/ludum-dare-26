@@ -108,7 +108,7 @@ public class tk2dTileMapEditor : Editor, ITileMapEditorHost
 		buildKey = tileMap.buildKey;
 		
 		string editorDataPath = AssetDatabase.GUIDToAssetPath(tileMap.editorDataGUID);
-		editorData = Resources.LoadAssetAtPath(editorDataPath, typeof(tk2dTileMapEditorData)) as tk2dTileMapEditorData;
+		editorData = AssetDatabase.LoadAssetAtPath(editorDataPath, typeof(tk2dTileMapEditorData)) as tk2dTileMapEditorData;
 		
 		width = tileMap.width;
 		height = tileMap.height;

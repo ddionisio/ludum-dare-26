@@ -222,7 +222,7 @@ public class ActionListener : MonoBehaviour {
         target.AddListener(this);
 
         mCurActionTarget = target;
-        mCurActionCollider = target.collider;
+        mCurActionCollider = target.GetComponent<Collider>();
 
         OnActionEnter();
 

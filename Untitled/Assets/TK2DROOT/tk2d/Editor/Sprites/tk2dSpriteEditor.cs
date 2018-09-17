@@ -220,7 +220,7 @@ class tk2dSpriteEditor : Editor
 			{
 				if (PrefabUtility.GetPrefabType(spr) == PrefabType.PrefabInstance)
 				{
-					Object parent = PrefabUtility.GetPrefabParent(spr.gameObject);
+					Object parent = PrefabUtility.GetCorrespondingObjectFromSource(spr.gameObject);
 					bool found = false;
 					foreach (tk2dBaseSprite sprite in targetSprites) {
 						if (sprite.gameObject == parent) {
@@ -281,7 +281,7 @@ class tk2dSpriteEditor : Editor
 		GameObject go = tk2dEditorUtility.CreateGameObjectInScene("Sprite");
 		tk2dSprite sprite = go.AddComponent<tk2dSprite>();
 		sprite.SwitchCollectionAndSprite(sprColl, sprColl.FirstValidDefinitionIndex);
-		sprite.renderer.material = sprColl.FirstValidDefinition.material;
+		sprite.GetComponent<Renderer>().material = sprColl.FirstValidDefinition.material;
 		sprite.Build();
 		
 		Selection.activeGameObject = go;

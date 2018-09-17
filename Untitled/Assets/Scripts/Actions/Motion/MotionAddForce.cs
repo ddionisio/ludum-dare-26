@@ -3,12 +3,12 @@ using HutongGames.PlayMaker;
 
 namespace Game.Actions {
     [ActionCategory("Game")]
-    [Tooltip("Add force to motion.")]
+    [HutongGames.PlayMaker.Tooltip("Add force to motion.")]
     public class MotionAddForce : M8.PlayMaker.FSMActionComponentBase<MotionBase> {
-        [Tooltip("Direction")]
+        [HutongGames.PlayMaker.Tooltip("Direction")]
         public FsmVector2 dir;
 
-        [Tooltip("Amount of force on given direction.")]
+        [HutongGames.PlayMaker.Tooltip("Amount of force on given direction.")]
         public FsmFloat force;
 
         public override void Reset() {

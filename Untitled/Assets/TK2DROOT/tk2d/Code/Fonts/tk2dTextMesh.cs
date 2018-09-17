@@ -616,7 +616,7 @@ public class tk2dTextMesh : MonoBehaviour, tk2dRuntime.ISpriteCollectionForceBui
 			mesh.uv = uvs;
 			if (font.textureGradients)
 			{
-				mesh.uv1 = uv2;
+				mesh.uv2 = uv2;
 			}
 			mesh.triangles = triangles;
 			mesh.colors32 = colors;
@@ -661,7 +661,7 @@ public class tk2dTextMesh : MonoBehaviour, tk2dRuntime.ISpriteCollectionForceBui
 				mesh.uv = uvs;
 				if (_fontInst.textureGradients)
 				{
-					mesh.uv1 = uv2;
+					mesh.uv2 = uv2;
 				}
 				
 				mesh.RecalculateBounds();
@@ -831,14 +831,14 @@ public class tk2dTextMesh : MonoBehaviour, tk2dRuntime.ISpriteCollectionForceBui
 		}
 		else if (Camera.main)
 		{
-			if (Camera.main.isOrthoGraphic)
+			if (Camera.main.orthographic)
 			{
 				s = Camera.main.orthographicSize;
 			}
 			else
 			{
 				float zdist = (transform.position.z - Camera.main.transform.position.z);
-				s = tk2dPixelPerfectHelper.CalculateScaleForPerspectiveCamera(Camera.main.fov, zdist);
+				s = tk2dPixelPerfectHelper.CalculateScaleForPerspectiveCamera(Camera.main.fieldOfView, zdist);
 			}
 		}
 		scale = new Vector3(Mathf.Sign(scale.x) * s, Mathf.Sign(scale.y) * s, Mathf.Sign(scale.z) * s);
@@ -856,8 +856,8 @@ public class tk2dTextMesh : MonoBehaviour, tk2dRuntime.ISpriteCollectionForceBui
 	
 	void UpdateMaterial()
 	{
-		if (renderer.sharedMaterial != _fontInst.materialInst)
-			renderer.material = _fontInst.materialInst;
+		if (GetComponent<Renderer>().sharedMaterial != _fontInst.materialInst)
+			GetComponent<Renderer>().material = _fontInst.materialInst;
 	}
 	
 	public void ForceBuild()

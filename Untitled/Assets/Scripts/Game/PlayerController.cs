@@ -157,8 +157,8 @@ public class PlayerController : MotionBase {
             mHelpPopUpActive = true;
             mHelpPopUp.SetActive(true);
 
-            if(mHelpPopUp.animation != null && !string.IsNullOrEmpty(helpPopUpShowAnim) && !mHelpPopUp.animation.IsPlaying(helpPopUpShowAnim))
-                mHelpPopUp.animation.Play(helpPopUpShowAnim, AnimationPlayMode.Queue);
+            if(mHelpPopUp.GetComponent<Animation>() != null && !string.IsNullOrEmpty(helpPopUpShowAnim) && !mHelpPopUp.GetComponent<Animation>().IsPlaying(helpPopUpShowAnim))
+                mHelpPopUp.GetComponent<Animation>().Play(helpPopUpShowAnim, AnimationPlayMode.Queue);
         }
     }
 
@@ -171,9 +171,9 @@ public class PlayerController : MotionBase {
 
     void HelpPopUpHide() {
         if(mHelpPopUpActive) {
-            if(mHelpPopUp.animation != null && !string.IsNullOrEmpty(helpPopUpHideAnim)) {
-                if(!mHelpPopUp.animation.IsPlaying(helpPopUpHideAnim)) {
-                    mHelpPopUp.animation.Play(helpPopUpHideAnim, AnimationPlayMode.Queue);
+            if(mHelpPopUp.GetComponent<Animation>() != null && !string.IsNullOrEmpty(helpPopUpHideAnim)) {
+                if(!mHelpPopUp.GetComponent<Animation>().IsPlaying(helpPopUpHideAnim)) {
+                    mHelpPopUp.GetComponent<Animation>().Play(helpPopUpHideAnim, AnimationPlayMode.Queue);
                 }
             }
             else if(mHelpPopUp.activeSelf) {
@@ -267,7 +267,7 @@ public class PlayerController : MotionBase {
         if(mHelpPopUp != null) {
             mHelpPopUpShowDelay = true;
 
-            while(mHelpPopUp.animation != null && mHelpPopUp.animation.isPlaying)
+            while(mHelpPopUp.GetComponent<Animation>() != null && mHelpPopUp.GetComponent<Animation>().isPlaying)
                 yield return new WaitForFixedUpdate();
 
             yield return new WaitForSeconds(helpPopUpDelay);

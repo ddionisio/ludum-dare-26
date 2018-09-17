@@ -55,7 +55,7 @@ public class AstarProfiler
 	
 	[System.Diagnostics.Conditional ("UNITY_PRO_PROFILER")]
 	public static void EndProfile () {
-		Profiler.EndSample ();
+		UnityEngine.Profiling.Profiler.EndSample ();
 	}
 	
 	[System.Diagnostics.Conditional ("ProfileAstar")]

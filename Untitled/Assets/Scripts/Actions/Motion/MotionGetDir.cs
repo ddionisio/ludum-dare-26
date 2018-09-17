@@ -3,11 +3,11 @@ using HutongGames.PlayMaker;
 
 namespace Game.Actions {
     [ActionCategory("Game")]
-    [Tooltip("Get the motion direction.")]
+    [HutongGames.PlayMaker.Tooltip("Get the motion direction.")]
     public class MotionGetDir : M8.PlayMaker.FSMActionComponentBase<MotionBase> {
         [RequiredField]
         [UIHint(UIHint.Variable)]
-        [Tooltip("Store the dir.")]
+        [HutongGames.PlayMaker.Tooltip("Store the dir.")]
         public FsmVector2 storeVector;
 
         public override void Reset() {

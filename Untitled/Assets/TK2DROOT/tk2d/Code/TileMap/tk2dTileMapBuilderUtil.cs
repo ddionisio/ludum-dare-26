@@ -85,7 +85,7 @@ namespace tk2dRuntime.TileMap
 			while (currentProcessedChild < children.Count)
 			{
 				var thisChild = children[currentProcessedChild++];
-				int childCount = thisChild.GetChildCount();
+				int childCount = thisChild.childCount;
 				for (int i = 0; i < childCount; ++i)
 					children.Add(thisChild.GetChild(i));
 			}

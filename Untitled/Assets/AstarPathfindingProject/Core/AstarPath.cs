@@ -1213,7 +1213,7 @@ public class AstarPath : MonoBehaviour {
 		//Try to join pathfinding threads
 		if (threads != null) {
 			for (int i=0;i<threads.Length;i++) {
-#if UNITY_WEBPLAYER
+#if UNITY_WEBGL
 				if (!threads[i].Join(200)) {
 					Debug.LogError ("Could not terminate pathfinding thread["+i+"] in 200ms." +
 						"Not good.\nUnity webplayer does not support Thread.Abort\nHoping that it will be terminated by Unity WebPlayer");
@@ -1872,21 +1872,21 @@ AstarPath.RegisterSafeUpdate (delegate () {
 	 */
 	public void OnApplicationQuit () {
 		if (threads == null) return;
-#if !UNITY_WEBPLAYER
+#if !UNITY_WEBGL
 		//Unity webplayer does not support Abort (even though it supports starting threads). Hope that UnityPlayer aborts the threads
 		for (int i=0;i<threads.Length;i++) {
 			threads[i].Abort ();
 		}
 #endif
-	}
-	
-#region MainThreads
-	
-	/** Coroutine to return thread safe path callbacks.
+    }
+
+    #region MainThreads
+
+    /** Coroutine to return thread safe path callbacks.
 	 * This method will infinitely loop and call #ReturnPaths
 	 * \see ReturnPaths
 	 */
-	public IEnumerator ReturnsPathsHandler () {
+    public IEnumerator ReturnsPathsHandler () {
 		while (true) {
 			ReturnPaths(true);
 			yield return 0;

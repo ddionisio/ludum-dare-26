@@ -119,7 +119,7 @@ public static class tk2dEditorUtility
 	{
 		if (index == null)
 		{
-			index = Resources.LoadAssetAtPath(indexPath, typeof(tk2dIndex)) as tk2dIndex;
+			index = AssetDatabase.LoadAssetAtPath(indexPath, typeof(tk2dIndex)) as tk2dIndex;
 		}
 		return index;
 	}

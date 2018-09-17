@@ -148,7 +148,7 @@ public class tk2dTileMap : MonoBehaviour, tk2dRuntime.ISpriteCollectionForceBuil
 				
 				var transform = chunk.gameObject.transform;
 				List<Transform> children = new List<Transform>();
-				for (int i = 0; i < transform.GetChildCount(); ++i)
+				for (int i = 0; i < transform.childCount; ++i)
 					children.Add(transform.GetChild(i));
 				for (int i = 0; i < children.Count; ++i)
 					DestroyImmediate(children[i].gameObject);
@@ -412,7 +412,7 @@ public class tk2dTileMap : MonoBehaviour, tk2dRuntime.ISpriteCollectionForceBuil
 			Debug.LogError("Prefab needs to be updated");
 #else
 			GameObject go = UnityEditor.PrefabUtility.FindValidUploadPrefabInstanceRoot(renderData);
-			Object obj = UnityEditor.PrefabUtility.GetPrefabParent(go);
+			Object obj = UnityEditor.PrefabUtility.GetCorrespondingObjectFromSource(go);
 			if (obj != null)
 				UnityEditor.PrefabUtility.ReplacePrefab(go, obj, UnityEditor.ReplacePrefabOptions.ConnectToPrefab);
 #endif

@@ -500,7 +500,7 @@ public class FlockUnit : MotionBase {
 
                         //only follow if it has a legit body
                         if(unit.isLegit) {
-                            Rigidbody otherBody = unit.rigidbody;
+                            Rigidbody otherBody = unit.GetComponent<Rigidbody>();
                             if(otherBody != null && !otherBody.isKinematic) {
                                 //align speed
                                 Vector2 vel = otherBody.velocity;

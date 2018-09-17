@@ -4,11 +4,11 @@ using HutongGames.PlayMaker;
 
 namespace Game.Actions {
     [ActionCategory("Game")]
-    [Tooltip("Get the direction towards the target.")]
+    [HutongGames.PlayMaker.Tooltip("Get the direction towards the target.")]
     public class ActionListenerGetDirToTarget : M8.PlayMaker.FSMActionComponentBase<ActionListener> {
         [RequiredField]
         [UIHint(UIHint.Variable)]
-        [Tooltip("Store the normal value.")]
+        [HutongGames.PlayMaker.Tooltip("Store the normal value.")]
         public FsmVector2 storeVector;
 
         public override void Reset() {

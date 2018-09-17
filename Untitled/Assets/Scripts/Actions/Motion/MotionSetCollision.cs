@@ -3,9 +3,9 @@ using HutongGames.PlayMaker;
 
 namespace Game.Actions {
     [ActionCategory("Game")]
-    [Tooltip("Enable/disable collider.")]
+    [HutongGames.PlayMaker.Tooltip("Enable/disable collider.")]
     public class MotionSetCollision : FsmStateAction {
-        [Tooltip("The Game Object to work with.")]
+        [HutongGames.PlayMaker.Tooltip("The Game Object to work with.")]
         public FsmOwnerDefault owner;
 
         public bool enable;
@@ -23,8 +23,8 @@ namespace Game.Actions {
             GameObject go = Fsm.GetOwnerDefaultTarget(owner);
 
             if(go != null) {
-                if(go.collider != null)
-                    go.collider.enabled = enable;
+                if(go.GetComponent<Collider>() != null)
+                    go.GetComponent<Collider>().enabled = enable;
             }
 
             Finish();

@@ -3,7 +3,7 @@ using HutongGames.PlayMaker;
 
 namespace Game.Actions {
     [ActionCategory("Game")]
-    [Tooltip("Get the flock unit's move target")]
+    [HutongGames.PlayMaker.Tooltip("Get the flock unit's move target")]
     public class FlockGetTarget : M8.PlayMaker.FSMActionComponentBase<FlockUnit> {
         [RequiredField]
         [UIHint(UIHint.Variable)]
