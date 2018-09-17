@@ -7,20 +7,6 @@
 *.unityproj
 *.sln
 
-NGUI/
-TK2DROOT/
-PlayMaker/
-PathologicalGames/
-NGUI.meta
-TK2DROOT.meta
-PlayMaker.meta
-PathologicalGames.meta
-
-Ouya/
-Plugins/Android/
-Ouya.meta
-Plugins/Android.meta
-
 *.suo
 /Untitled/Windows-Build
 /Untitled/Google-Build
